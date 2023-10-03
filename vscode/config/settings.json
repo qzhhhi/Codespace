@@ -1,0 +1,4 @@
+{
+    "cmake.configureOnOpen": true,
+    "global-config.folder": "~/.vscode-server/config"
+}

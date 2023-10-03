@@ -1,0 +1,22 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build-single-c",
+            "type": "shell",
+            "command": "gcc",
+            "args": ["-std=c11", "-g", "${file}", "-o", "${fileDirname}/${fileBasenameNoExtension}", "-lcs50"],
+            "group": "build"
+            
+        },
+        {
+            "label": "build-single-cpp",
+            "type": "shell",
+            "command": "g++",
+            "args": ["-std=c++17", "-g", "${file}", "-o", "${fileDirname}/${fileBasenameNoExtension}", "-lcs50"],
+            "group": "build"            
+        }
+    ]
+}

@@ -1,0 +1,12 @@
+# Please see <file:/usr/share/doc/menu/README> for information.
+
+[begin] (Fluxbox)
+
+   [exec] (CubeMX) { ~/.stm32cubemx/STM32CubeMX } <>
+   [exec] (Terminal) { x-terminal-emulator -T "Zsh" -e /bin/zsh} <>
+   # [submenu] (Styles) {}
+   #    [stylesdir] (/usr/share/fluxbox/styles)
+   #    [stylesdir] (~/.fluxbox/styles)
+   # [end]
+
+[end]
