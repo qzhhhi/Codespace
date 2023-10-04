@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>帐号注册 - Alliance Codespace</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            height: 100%;
+        }
+
+        body {
+            height: 100%;
+            background: #2c3e50;
+        }
+
+        .container {
+            /* background: url("otuai.png") no-repeat; */
+            /* background-position: center; */
+            height: 100%;
+            width: 100%;
+            /* background-size: 100% cover; */
+        }
+
+        .login-wrapper {
+            width: 360px;
+            height: 610px;
+            border-radius: 15px;
+            padding: 0 50px;
+            position: relative;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+
+            background-color: #3e566e;
+            backdrop-filter: blur(10px);
+            box-shadow: 10px 10px 20px rgba(33, 44, 55, .3);
+        }
+
+        .header {
+            font-family: sans-serif;
+            font-size: 30px;
+            font-weight: bold;
+            text-align: center;
+            padding-top: 20px;
+            line-height: 120px;
+            color: #ffffffd3;
+        }
+
+        .input-item {
+            color: #ffffff;
+            width: 92%;
+            margin-bottom: 30px;
+            padding: 10px;
+            font-size: 15px;
+            border: none;
+            border-bottom: 2px solid #ffffff;
+            outline: none;
+            background-color: transparent;
+        }
+
+        .input-item::placeholder {
+            color: #ffffffd2;
+            text-transform: uppercase;
+
+        }
+
+        .btn {
+            width: 92%;
+            flex: 1 1 auto;
+            margin-top: 30px;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: 0.3s;
+            background-image: linear-gradient(to right, #3077f1, #964df7);
+            color: #fff;
+            font-family: Arial, Helvetica, sans-serif;
+            z-index: 0;
+        }
+
+        .btn:after {
+            position: absolute;
+            transition: 0.3s;
+            content: "";
+            width: 0;
+            left: 50%;
+            bottom: 0;
+            height: 3px;
+            background: #f7f7f7;
+        }
+
+
+        .btn:nth-of-type(1):after {
+            height: 120%;
+            left: -10%;
+            transform: skewX(15deg);
+            z-index: -1;
+        }
+
+        .btn:hover:nth-of-type(1) {
+            color: #919191e3;
+        }
+
+        .btn:hover:nth-of-type(1):after {
+            left: -10%;
+            width: 120%;
+        }
+
+        .jump {
+            left: 50px;
+            right: 0;
+            flex: 1 1 auto;
+            right: 60px;
+            padding: 5px;
+            border-radius: 5px;
+            text-align: center;
+            text-transform: uppercase;
+            position: absolute;
+            overflow: hidden;
+            transition: 0.3s;
+            background: #f7f7f78f;
+            color: #222222;
+            font-family: Arial, Helvetica, sans-serif;
+            z-index: 0;
+            border: none;
+        }
+
+        .jump:after {
+            position: absolute;
+            transition: 0.5s;
+            content: "";
+            width: 0;
+            left: 50%;
+            bottom: 0;
+            height: 3px;
+            background: #ffffff;
+        }
+
+        .jump:nth-of-type(1):after {
+            height: 120%;
+            left: -10%;
+            z-index: -1;
+        }
+
+        .jump:hover:nth-of-type(1) {
+            color: #000000e3;
+        }
+
+        .jump:hover:nth-of-type(1):after {
+            left: -10%;
+            width: 120%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="login-wrapper">
+            <div class="header">账号注册</div>
+            <div class="form-wrapper">
+                <input type="text" name="number" id="stuid" class="input-item" placeholder="请输入学号">
+                <input type="text" name="number" id="name" class="input-item" placeholder="请输入你的姓名">
+                <input type="text" name="number" id="tel" class="input-item" placeholder="请输入报名时填写的电话号码">
+                <input type="password" name="number" id="pwd" class="input-item" placeholder="请输入密码">
+                <input type="password" name="number" id="verify-pwd" class="input-item" placeholder="请再次输入密码">
+                <div class="btn" onclick="submit(this)">注册</div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function submit(btn) {
+            if (btn.submitting)
+                return;
+            var stuid = document.getElementById("stuid").value;
+            if (!stuid) {
+                alert("请填写学号！"); return;
+            }
+            if (stuid.length !== 12) {
+                alert("不正确的学号！"); return;
+            }
+            var name = document.getElementById("name").value;
+            if (!name) {
+                alert("请填写姓名！"); return;
+            }
+            var tel = document.getElementById("tel").value;
+            if (!tel) {
+                alert("请填写电话号码！"); return;
+            }
+            if (tel.length !== 11) {
+                alert("不正确的电话号码！"); return;
+            }
+            var pwd = document.getElementById("pwd").value;
+            if (!pwd) {
+                alert("请填写密码！"); return;
+            }
+            if (pwd !== document.getElementById("verify-pwd").value) {
+                alert("两次密码输入不一致！"); return;
+            }
+
+            var httpRequest = new XMLHttpRequest();
+            httpRequest.open('POST', 'https://api.rm-alliance.work/register', true);
+            httpRequest.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+            httpRequest.onreadystatechange = function () {
+                if (httpRequest.readyState == 4) {
+                    if (httpRequest.status == 200) {
+                        var result = JSON.parse(httpRequest.responseText);
+                        console.log(result);
+                        if (result.success === true) {
+                            alert('注册成功！');
+                            window.location.href = "/";
+                        }
+                        else {
+                            alert("注册失败：" + result.msg + "。");
+                        }
+                    }
+                    else alert("网络错误(" + httpRequest.status + ")：" + httpRequest.responseText);
+                }
+                btn.submitting = false;
+            };
+            httpRequest.send("id=" + encodeURI(stuid) + "&name=" + encodeURI(name) + "&tel=" + encodeURI(tel) + "&pwd=" + encodeURI(pwd));
+            btn.submitting = true;
+        };
+    </script>
+</body>
+
+</html>

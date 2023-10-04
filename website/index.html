@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alliance Codespace</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            height: 100%;
+        }
+
+        body {
+            height: 100%;
+        }
+
+        .container {
+            background: url("otuai.png") no-repeat;
+            background-position: center;
+            height: 100%;
+            width: 100%;
+            background-size: 100% cover;
+        }
+
+        .main-wrapper {
+            background-color: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            width: 450px;
+            height: 360px;
+            border-radius: 15px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .header {
+            font-family: sans-serif;
+            font-size: 30px;
+            font-weight: bold;
+            text-align: center;
+            line-height: 130px;
+            color: #323141d3;
+        }
+
+        .input-item {
+            color: #24304493;
+            display: block;
+            width: 350px;
+            margin-bottom: 20px;
+            margin-left: auto;
+            margin-right: auto;
+            border: 0;
+            padding: 10px;
+            font-size: 15px;
+            border-radius: 3px;
+            outline: rgb(255, 255, 255);
+            left: 50%;
+        }
+
+        .input-item:placeholder {
+            text-transform: uppercase;
+        }
+
+        .register {
+            display:block;
+            font-family: sans-serif;
+            width: 370px;
+            text-align: right;
+            color: #323141be;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .login-wrapper {
+            display: flex;
+            justify-content: space-between;
+            width: 370px;
+            margin-top: 5px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn-login-left {
+            width: 100%;
+            margin-right: 6px;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            text-transform: uppercase;
+            position:relative;
+            overflow: hidden;
+            transition: 0.3s;
+            color: #fff;
+            font-family: Arial, Helvetica, sans-serif;
+            z-index: 0;
+            background-image: linear-gradient(to right, #a6c1ee, #d1c2ed);
+        }
+        .btn-login-right {
+            width: 150%;
+            margin-left: 6px;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            text-transform: uppercase;
+            position:relative;
+            overflow: hidden;
+            transition: 0.3s;
+            color: #fff;
+            font-family: Arial, Helvetica, sans-serif;
+            z-index: 0;
+            background-image: linear-gradient(to right, #d1c2ed, #fbc2eb);
+        }
+
+        .btn:after {
+            position: absolute;
+            transition: 0.3s;
+            content: "";
+            width: 0;
+            left: 50%;
+            bottom: 0;
+            height: 3px;
+            background: #f7f7f7;
+        }
+
+
+        .btn:nth-of-type(1):after {
+            height: 120%;
+            left: -10%;
+            transform: skewX(15deg);
+            z-index: -1;
+        }
+
+        .btn:hover:nth-of-type(1) {
+            color: #919191e3;
+        }
+        .btn:hover:nth-of-type(1):after {
+            left: -10%;
+            width: 120%;
+        }
+
+        .login-success-title {
+            /* font-family: sans-serif; */
+            font-size: 30px;
+            /* font-weight: bold; */
+            text-align: center;
+            /* line-height: 130px; */
+            /* background-color: rgba(255, 255, 255, 0.3); */
+            margin-top: 150px;
+            color: #323141d3;
+        }
+
+        .jump {
+            width: 50%;
+            flex: 1 1 auto;
+            right: 30px;
+            padding: 5px;
+            border-radius: 5px;
+            text-align: center;
+            text-transform: uppercase;
+            position: absolute;
+            overflow: hidden;
+            transition: 0.3s;
+            background: #d5bdf5;
+            z-index: 0;
+            border: none;
+
+            animation-duration: 3s;
+            animation-name: slidein;
+            animation-iteration-count: infinite;
+        }
+
+        @keyframes slidein {
+            from {
+                position: absolute;
+                width: 0;
+                left: 5%;
+                bottom: 0;
+                height: 3px;
+                background: #ffffff9d;
+            }
+
+            25% {
+                position: absolute;
+                width: 50%;
+                left: 25%;
+                bottom: 0;
+                height: 3px;
+                background: #ffffff9d;
+            }
+
+            50% {
+                position: absolute;
+                width: 0;
+                left: 90%;
+                bottom: 0;
+                height: 3px;
+                background: #ffffff9d;
+            }
+
+            50.1% {
+                position: absolute;
+                width: 0;
+                left: 90%;
+                bottom: 0;
+                height: 3px;
+                background: #ffffff9d;
+            }
+
+
+            75% {
+                position: absolute;
+                width: 50%;
+                left: 25%;
+                bottom: 0;
+                height: 3px;
+                background: #ffffff9d;
+            }
+
+            to {
+                position: absolute;
+                width: 0;
+                left: 5%;
+                bottom: 0;
+                height: 3px;
+                background: #ffffff9d;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-wrapper">
+            <div class="header">Alliance Codespace</div>
+            <div class="form-wrapper" id="login-box">
+                <input type="text" name="number" class="input-item" placeholder="请输入学号" id="stuid">
+                <input type="password" name="number" class="input-item" placeholder="请输入密码" id="pwd">
+                <a href="/register.html" class="register">没有账号？注册一个吧</a>
+                <div class="login-wrapper">
+                    <div class="btn-login-left" title="通过位于香港的frp服务器中转，会有更高延迟，适用于非校园网的普通互联网环境" onclick="login(this, 'rm-alliance.work')">互联网登入</div>
+                    <div class="btn-login-right" title="当连接了NJUST或NJUST-FREE网络时，使用此登录方式访问可以获得最好的体验" onclick="login(this, 'rm-alliance.work')">校园网登入（推荐）</div>
+                </div>
+            </div>
+        </div>
+        <div class="main-wrapper" id="wait-box", hidden=true>
+            <div class="login-success-title">登录成功，等待容器启动…</div>
+            <button class="jump"></button>
+        </div>
+    </div>
+</body>
+<script>
+    function login(btn, domain) {
+        if (document.submitting)
+            return;
+        var stuid = document.getElementById("stuid").value;
+        if (!stuid) {
+            alert("请填写学号！"); return;
+        }
+        var pwd = document.getElementById("pwd").value;
+        if (!pwd) {
+            alert("请填写密码！"); return;
+        }
+        var httpRequest = new XMLHttpRequest();
+        httpRequest.open('POST', 'https://api.rm-alliance.work/login', true);
+        httpRequest.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+        httpRequest.onreadystatechange = function () {
+            if (httpRequest.readyState == 4) {
+                if (httpRequest.status == 200) {
+                    var result = JSON.parse(httpRequest.responseText);
+                    console.log(result);
+                    if (result.success) {
+                        var jump_url = "https://" + result.subdomain + "." + domain + "?tkn=" + result.token;
+                        if (!result.active) {
+                            document.getElementById("wait-box").hidden = false;
+                            document.getElementById("login-box").hidden = true;
+                            setTimeout(() => {
+                                window.location.href = jump_url;
+                                document.getElementById("test").click();
+                            }, 2500);
+                        }
+                        else {
+                            window.location.href = jump_url;
+                        }
+                    }
+                    else alert("登录失败：" + result.msg + "。")
+                }
+                else alert("网络错误(" + httpRequest.status + ")：" + httpRequest.responseText)
+            }
+            document.submitting = false;
+        };
+        httpRequest.send("id=" + encodeURI(stuid) + "&pwd=" + encodeURI(pwd));
+        document.submitting = true;
+    }
+</script>
+</html>
