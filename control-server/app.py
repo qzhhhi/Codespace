@@ -78,9 +78,15 @@ def login():
     subdomain = data['subdomain']
     token = uuid.uuid4()
     docker.containers.run(
-        "qzhhhi/alliance-vsc-server:0.0.4",
+        "qzhhhi/alliance-vsc-server:0.0.5",
         name=get_container_name(data),
         detach=True, remove=True, hostname="alliance",
         environment=[f"WEBSITE_SUBDOMAIN={subdomain}", f"LOGIN_TOKEN={token}"],        
     )
     return {"success": True, "active": False, "subdomain": subdomain, "token": token}
+
+def after_request(resp):
+    resp.headers['Access-Control-Allow-Origin'] = '*'
+    return resp
+
+app.after_request(after_request)

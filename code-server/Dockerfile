@@ -100,5 +100,5 @@ COPY ./entry-point.sh /usr/bin/entry-point.sh
 EXPOSE 8080
 EXPOSE 5900
 
-ENTRYPOINT ["/usr/bin/tini", "--"]
-CMD ["/usr/bin/entry-point.sh"]
+ENTRYPOINT [ "/usr/bin/tini", "--" ]
+CMD [ "/usr/bin/entry-point.sh" ]
