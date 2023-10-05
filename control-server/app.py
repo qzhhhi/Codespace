@@ -1,3 +1,4 @@
+import os
 import base64
 from flask import Flask
 from flask import request
@@ -78,11 +79,15 @@ def login():
     subdomain = data['subdomain']
     token = uuid.uuid4()
     docker.containers.run(
-        "qzhhhi/alliance-vsc-server:0.0.5",
+        "qzhhhi/alliance-vsc-server:latest",
         name=get_container_name(data),
         detach=True, remove=True, hostname="alliance",
-        environment=[f"WEBSITE_SUBDOMAIN={subdomain}", f"LOGIN_TOKEN={token}"],        
+        environment=[f"WEBSITE_SUBDOMAIN={subdomain}", f"LOGIN_TOKEN={token}"],
+        mem_limit="2G",
+        memswap_limit="4G",
+        volumes={os.path.join(os.getcwd(), "userdata", data['_id']): {"bind": "/home/ubuntu/workspace", "mode": "rw"}},
     )
+    print({"/home/ubuntu/workspace": {"bind": os.path.join(os.getcwd(), "userdata", data['_id']), "mode": "rw"}});
     return {"success": True, "active": False, "subdomain": subdomain, "token": token}
 
 def after_request(resp):

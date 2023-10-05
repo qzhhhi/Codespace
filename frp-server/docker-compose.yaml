@@ -1,0 +1,11 @@
+version: '3'
+services:
+    alliance-frp-server:
+        image: 'qzhhhi/alliance-frp-server:latest'
+        restart: unless-stopped
+        ports:
+            - '80:80'
+            - '443:443'
+            - '7000:7000'
+        volumes:
+            - './cert:/etc/cert'
