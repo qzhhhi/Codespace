@@ -2,6 +2,8 @@
 
 set -e
 
+sudo chown ubuntu:ubuntu /home/ubuntu/workspace
+
 if [[ -z "${WEBSITE_SUBDOMAIN}" ]]; then
     echo "Missing environment variables: WEBSITE_SUBDOMAIN"
     exit 1
