@@ -19,7 +19,7 @@
         }
 
         .container {
-            background: url("otuai.png") no-repeat;
+            background: url("https://pic.imgdb.cn/item/65377178c458853aef4a201b.jpg") no-repeat;
             background-position: center;
             height: 100%;
             width: 100%;
@@ -98,6 +98,7 @@
             color: #fff;
             font-family: Arial, Helvetica, sans-serif;
             z-index: 0;
+            cursor: default;
             background-image: linear-gradient(to right, #a6c1ee, #d1c2ed);
         }
         .btn-login-right {
@@ -113,43 +114,53 @@
             color: #fff;
             font-family: Arial, Helvetica, sans-serif;
             z-index: 0;
+            cursor: default;
             background-image: linear-gradient(to right, #d1c2ed, #fbc2eb);
         }
 
-        .btn:after {
+        .btn-login-left:after {
             position: absolute;
             transition: 0.3s;
             content: "";
-            width: 0;
-            left: 50%;
-            bottom: 0;
-            height: 3px;
-            background: #f7f7f7;
-        }
-
-
-        .btn:nth-of-type(1):after {
-            height: 120%;
             left: -10%;
+            bottom: 0;
+            width: 0;
+            height: 120%;
+            background: #f7f7f7;
             transform: skewX(15deg);
             z-index: -1;
         }
-
-        .btn:hover:nth-of-type(1) {
+        .btn-login-left:hover {
             color: #919191e3;
         }
-        .btn:hover:nth-of-type(1):after {
+        .btn-login-left:hover:after {
+            left: -10%;
+            width: 120%;
+        }
+
+        .btn-login-right:after {
+            position: absolute;
+            transition: 0.3s;
+            content: "";
+            left: -10%;
+            bottom: 0;
+            width: 0;
+            height: 120%;
+            background: #f7f7f7;
+            transform: skewX(15deg);
+            z-index: -1;
+        }
+        .btn-login-right:hover {
+            color: #919191e3;
+        }
+        .btn-login-right:hover:after {
             left: -10%;
             width: 120%;
         }
 
         .login-success-title {
-            /* font-family: sans-serif; */
             font-size: 30px;
-            /* font-weight: bold; */
             text-align: center;
-            /* line-height: 130px; */
-            /* background-color: rgba(255, 255, 255, 0.3); */
             margin-top: 150px;
             color: #323141d3;
         }
