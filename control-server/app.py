@@ -1,97 +1,102 @@
-import os
-import base64
-from flask import Flask
-from flask import request
-from pymongo import MongoClient
-from hashlib import sha256
+import asyncio
+import logging
 import uuid
-import docker as docker_sdk
-from time import sleep
+from hashlib import sha256
 
-docker = docker_sdk.from_env()
+from codespace import CodespaceController
+from pymongo import MongoClient
+from quart import Quart, request
 
 mongo = MongoClient(f"mongodb://root:password@127.0.0.1:27017")
 whitelist = mongo["user"]["whitelist"]
 accounts = mongo["user"]["account"]
 
-app = Flask(__name__)
+app = Quart(__name__)
 app.json.ensure_ascii = False
+app.logger.setLevel(logging.INFO)
 
 register_keys = set(["id", "name", "tel", "pwd"])
 login_keys = set(["id", "pwd"])
 
-active_containers = {}
 
 def hash_password(request_form):
-    return sha256(f"{request_form['pwd']}salt{request_form['id']}*".encode('utf-8')).hexdigest()
+    return sha256(
+        f"{request_form['pwd']}salt{request_form['id']}*".encode("utf-8")
+    ).hexdigest()
+
 
 def generate_subdomain():
     return str(uuid.uuid4())[-12:]
 
-def get_container_name(data):
-    return f"alliance-vsc-server-{data['_id']}"
 
-@app.route("/register", methods=['POST'])
-def register():
-    if set(request.form.keys()) != register_keys:
+@app.before_serving
+async def startup():
+    global codespace
+    loop = asyncio.get_event_loop()
+    codespace = CodespaceController(loop=loop, logger=app.logger)
+
+
+@app.post("/register")
+async def register():
+    request_data = await request.form
+
+    if set(request_data.keys()) != register_keys:
         return "Bad request", 400
-    
-    data = whitelist.find_one({"_id": request.form["id"], "name": request.form["name"], "tel": request.form["tel"]})
-    if data is None:
+
+    whitelist_data = whitelist.find_one(
+        {
+            "_id": request_data["id"],
+            "name": request_data["name"],
+            "tel": request_data["tel"],
+        }
+    )
+    if whitelist_data is None:
         return {"success": False, "msg": "学号不在白名单中，或其他信息不匹配，请检查信息是否有误"}
-    if data["enabled"] == False:
+    if whitelist_data["enabled"] == False:
         return {"success": False, "msg": "账户存在，但不再有效，请联系管理员"}
-    if accounts.find_one(request.form["id"]) is not None:
+    if accounts.find_one(request_data["id"]) is not None:
         return {"success": False, "msg": "账户已存在，请登录"}
-    
+
     for i in range(10):
         subdomain = generate_subdomain()
         if accounts.find_one({"subdomain": subdomain}) is None:
-            accounts.insert_one({
-                "_id": request.form["id"],
-                "pwd": hash_password(request.form),
-                "subdomain": generate_subdomain()
-            })
+            accounts.insert_one(
+                {
+                    "_id": request_data["id"],
+                    "pwd": hash_password(request_data),
+                    "subdomain": generate_subdomain(),
+                }
+            )
             return {"success": True}
     return {"success": False, "msg": "域名冲突，请联系管理员"}
-        
-    
-@app.route("/login", methods=['POST'])
-def login():
-    if set(request.form.keys()) != login_keys:
-        return "Bad request", 400    
-    data = accounts.find_one({
-        "_id": request.form["id"],
-        "pwd": hash_password(request.form)
-    })
+
+
+@app.route("/login", methods=["POST"])
+async def login():
+    request_form = await request.form
+
+    if set(request_form.keys()) != login_keys:
+        return "Bad request", 400
+    data = accounts.find_one(
+        {"_id": request_form["id"], "pwd": hash_password(request_form)}
+    )
     if data is None:
         return {"success": False, "msg": "用户名或密码错误"}
-    if whitelist.find_one(request.form["id"])["enabled"] == False:
+    if whitelist.find_one(request_form["id"])["enabled"] == False:
         return {"success": False, "msg": "账户存在，但不再有效，请联系管理员"}
-    
-    try:
-        pass
-        container = docker.containers.get(get_container_name(data))
-        env = dict((line.split("=", 1) for line in container.attrs["Config"]["Env"]))
-        return {"success": True, "active": True, "subdomain": env["WEBSITE_SUBDOMAIN"], "token": env["LOGIN_TOKEN"]}
-    except docker_sdk.errors.NotFound: pass
 
-    subdomain = data['subdomain']
-    token = uuid.uuid4()
-    docker.containers.run(
-        "qzhhhi/alliance-vsc-server:latest",
-        name=get_container_name(data),
-        detach=True, remove=True, hostname="alliance",
-        environment=[f"WEBSITE_SUBDOMAIN={subdomain}", f"LOGIN_TOKEN={token}"],
-        mem_limit="2G",
-        memswap_limit="4G",
-        volumes={os.path.join(os.getcwd(), "userdata", data['_id']): {"bind": "/home/ubuntu/workspace", "mode": "rw"}},
-    )
-    print({"/home/ubuntu/workspace": {"bind": os.path.join(os.getcwd(), "userdata", data['_id']), "mode": "rw"}});
-    return {"success": True, "active": False, "subdomain": subdomain, "token": token}
+    response = await codespace.run_or_fetch(data)
+    response["success"] = True
+    return response
+
 
 def after_request(resp):
-    resp.headers['Access-Control-Allow-Origin'] = '*'
+    resp.headers["Access-Control-Allow-Origin"] = "*"
     return resp
 
+
 app.after_request(after_request)
+
+
+if __name__ == "__main__":
+    app.run(host="127.0.0.1", port=5000)

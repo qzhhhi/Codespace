@@ -4,19 +4,18 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build-single-c",
+            "label": "build-single",
             "type": "shell",
-            "command": "gcc",
-            "args": ["-std=c11", "-g", "${file}", "-o", "${fileDirname}/${fileBasenameNoExtension}", "-lcs50"],
+            "command": "make",
+            "args": [
+                "CC=gcc",
+                "CFLAGS='-fmax-errors=1 -g -O0 -std=c11 -Wall -Werror=implicit -Werror=shadow'",
+                "CXX=g++",
+                "CXXFLAGS='-g -std=c++17'",
+                "LDLIBS='-lcs50'",
+                "${fileDirname}/${fileBasenameNoExtension}"
+            ],
             "group": "build"
-            
-        },
-        {
-            "label": "build-single-cpp",
-            "type": "shell",
-            "command": "g++",
-            "args": ["-std=c++17", "-g", "${file}", "-o", "${fileDirname}/${fileBasenameNoExtension}", "-lcs50"],
-            "group": "build"            
         }
     ]
 }

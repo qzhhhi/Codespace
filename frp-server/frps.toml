@@ -1,0 +1,9 @@
+bindAddr = "0.0.0.0"
+bindPort = 7000
+vhostHTTPPort = 8080
+transport.tls.force = true
+transport.tls.certFile = "/etc/cert/frp-server.crt"
+transport.tls.keyFile = "/etc/cert/frp-server.key"
+transport.tls.trustedCaFile = "/etc/cert/frp-ca.crt"
+custom404Page = "/etc/frps/404.html"
+subDomainHost = "SERVER_DOMAIN"

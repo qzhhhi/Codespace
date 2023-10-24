@@ -1,4 +1,15 @@
 {
+    "workbench.tree.indent": 20,
+    "workbench.iconTheme": "material-icon-theme",
+    "editor.unicodeHighlight.includeStrings": false,
+    "[c]": {
+        "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
+    },
+    "[cpp]": {
+        "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
+    },
+    "files.autoSave": "onFocusChange",
+    "editor.formatOnSave": true,
     "cmake.configureOnOpen": true,
     "global-config.folder": "~/.vscode-server/config"
 }

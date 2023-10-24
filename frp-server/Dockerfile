@@ -17,7 +17,7 @@ RUN FRP_LATEST_VER=$(curl -fsSL https://api.github.com/repos/fatedier/frp/releas
     mkdir /etc/frps && mv frp-temp/frps /etc/frps/ && rm -f frp.tar.gz && rm -rf frp-temp
 
 COPY nginx.conf /etc/nginx/nginx.conf
-COPY frps.ini 404.html /etc/frps/
+COPY frps.toml 404.html /etc/frps/
 
 COPY ./entry-point.sh /usr/bin/entry-point.sh
 

@@ -9,3 +9,5 @@ services:
             - '7000:7000'
         volumes:
             - './cert:/etc/cert'
+        environment:
+            SERVER_DOMAIN: 'rm-alliance.tech'

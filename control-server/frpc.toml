@@ -1,0 +1,13 @@
+serverAddr = "8.218.237.120"
+serverPort = 7000
+transport.tls.enable = true
+transport.tls.certFile = "/etc/cert/frp-client.crt"
+transport.tls.keyFile = "/etc/cert/frp-client.key"
+transport.tls.trustedCaFile = "/etc/cert/frp-ca.crt"
+
+[[proxies]]
+name = "web-api"
+type = "http"
+localIP = "127.0.0.1"
+localPort = 5000
+subdomain = "api"

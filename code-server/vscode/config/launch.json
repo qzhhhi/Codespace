@@ -5,22 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Debug C(单文件)",
+            "name": "Debug C/C++(单文件)",
             "type": "lldb",
             "request": "launch",
             "program": "${fileDirname}/${fileBasenameNoExtension}",
             "args": [],
             "cwd": "${workspaceFolder}",
-            "preLaunchTask": "build-single-c"
-        },
-        {
-            "name": "Debug C++(单文件)",
-            "type": "lldb",
-            "request": "launch",
-            "program": "${fileDirname}/${fileBasenameNoExtension}",
-            "args": [],
-            "cwd": "${workspaceFolder}",
-            "preLaunchTask": "build-single-cpp"
+            "preLaunchTask": "build-single"
         },
         {
             "name": "Debug CMake",

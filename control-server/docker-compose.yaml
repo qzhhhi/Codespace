@@ -1,10 +1,20 @@
-version: '3.1'
+version: '3'
 services:
-  mongo:
-    image: mongo
-    restart: unless-stopped
-    ports:
-      - 127.0.0.1:27017:27017
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: password
+    mongo:
+        image: mongo
+        restart: unless-stopped
+        ports:
+            - 127.0.0.1:27017:27017
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: 'root'
+            MONGO_INITDB_ROOT_PASSWORD: 'password'
+    alliance-control-server:
+        image: 'qzhhhi/alliance-control-server:latest'
+        restart: unless-stopped
+        network_mode: host
+        environment:
+            API_FRP_SERVER_LIST: 'frps.rm-alliance.work'
+            CODE_FRP_SERVER_LIST: 'frps.rm-alliance.work;127.0.0.1'
+        volumes:
+            - './cert:/etc/cert'
+            - '/var/run/docker.sock:/var/run/docker.sock'

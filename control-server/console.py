@@ -1,13 +1,16 @@
-import csv
-import ast
-import json
+#!/usr/bin/env python3
+
 import argparse
+import ast
+import csv
+import json
+
 from pymongo import MongoClient
 
 parser = argparse.ArgumentParser(
     prog="console",
     description="Console of codespace server.",
-    epilog="(C)Copyright: NJUST.Alliance - All rights reserved"
+    epilog="(C)Copyright: NJUST.Alliance - All rights reserved",
 )
 
 parser.add_argument("--host", default="127.0.0.1", help="Hostname of MongoDB server.")
@@ -17,27 +20,42 @@ subparsers = parser.add_subparsers(dest="function", required=True)
 
 whitelist_parser = subparsers.add_parser("whitelist")
 whitelist_parser.add_argument("--ls", action="store_true", help="List all items.")
-whitelist_parser.add_argument("--find", metavar="FILTER", help="List all items found by filter.")
-whitelist_parser.add_argument("--rm", metavar="FILTER", help="Remove items found by filter.")
-whitelist_parser.add_argument("--insert", metavar="DATA", help="Insert JSON format data.")
-whitelist_parser.add_argument("--insert-csv", metavar="PATH", help="Insert multiline csv file.")
-whitelist_parser.add_argument("--enable", metavar="PATH", help="Enable items found by filter.")
-whitelist_parser.add_argument("--disable", metavar="PATH", help="Disable items found by filter.")
+whitelist_parser.add_argument(
+    "--find", metavar="FILTER", help="List all items found by filter."
+)
+whitelist_parser.add_argument(
+    "--rm", metavar="FILTER", help="Remove items found by filter."
+)
+whitelist_parser.add_argument(
+    "--insert", metavar="DATA", help="Insert JSON format data."
+)
+whitelist_parser.add_argument(
+    "--insert-csv", metavar="PATH", help="Insert multiline csv file."
+)
+whitelist_parser.add_argument(
+    "--enable", metavar="PATH", help="Enable items found by filter."
+)
+whitelist_parser.add_argument(
+    "--disable", metavar="PATH", help="Disable items found by filter."
+)
 
 account_parser = subparsers.add_parser("account")
 account_parser.add_argument("--ls", action="store_true", help="List all items.")
-account_parser.add_argument("--find", metavar="FILTER", help="List all items found by filter.")
-account_parser.add_argument("--rm", metavar="FILTER", help="Remove items found by filter.")
+account_parser.add_argument(
+    "--find", metavar="FILTER", help="List all items found by filter."
+)
+account_parser.add_argument(
+    "--rm", metavar="FILTER", help="Remove items found by filter."
+)
 account_parser.add_argument("--insert", metavar="DATA", help="Insert JSON format data.")
 
 args = parser.parse_args()
 print(args)
 
 mongo = MongoClient(f"mongodb://root:password@{args.host}:{args.port}")
-# whitelist = mongo["user"]["whitelist"]
-# accounts = mongo["user"]["account"]
 
 titles = set(["_id", "name", "tel", "qq", "batch", "enabled"])
+
 
 def to_filter(str):
     try:
@@ -45,6 +63,7 @@ def to_filter(str):
         return {"_id": str}
     except:
         return json.loads(str)
+
 
 target_collection = mongo["user"][args.function]
 
@@ -62,7 +81,9 @@ elif args.rm:
     data_list = target_collection.find(filter)
     for data in data_list:
         print(json.dumps(data, ensure_ascii=False))
-    confirmation = input(f"A total of {target_collection.count_documents(filter)} pieces of data will be removed, are you sure? y/n: ")
+    confirmation = input(
+        f"A total of {target_collection.count_documents(filter)} pieces of data will be removed, are you sure? y/n: "
+    )
     if confirmation.lower() == "y":
         target_collection.delete_many(filter)
 elif args.insert:
@@ -74,7 +95,7 @@ elif args.insert:
         print(f"Inserted data MUST satisfy: key equals to {titles}")
 elif args.insert_csv:
     with open(args.insert_csv) as csvfile:
-        csv_reader = csv.reader(csvfile, delimiter=',', quotechar='"')
+        csv_reader = csv.reader(csvfile, delimiter=",", quotechar='"')
         csv_title = None
         data_list = []
         for row in csv_reader:
@@ -89,7 +110,9 @@ elif args.insert_csv:
                 data["enabled"] = False if data["enabled"] == "0" else True
                 print(json.dumps(data, ensure_ascii=False))
                 data_list.append(data)
-        confirmation = input(f"A total of {len(data_list)} pieces of data will be inserted, are you sure? y/n: ")
+        confirmation = input(
+            f"A total of {len(data_list)} pieces of data will be inserted, are you sure? y/n: "
+        )
         if confirmation.lower() == "y":
             target_collection.insert_many(data_list)
             print(f"Successfully inserted data.")
@@ -98,7 +121,9 @@ elif args.enable:
     data_list = target_collection.find(filter)
     for data in data_list:
         print(json.dumps(data, ensure_ascii=False))
-    confirmation = input(f"A total of {target_collection.count_documents(filter)} pieces of data will be enabled, are you sure? y/n: ")
+    confirmation = input(
+        f"A total of {target_collection.count_documents(filter)} pieces of data will be enabled, are you sure? y/n: "
+    )
     if confirmation.lower() == "y":
         target_collection.update_many(filter, {"$set": {"enabled": True}})
 elif args.disable:
@@ -106,6 +131,8 @@ elif args.disable:
     data_list = target_collection.find(filter)
     for data in data_list:
         print(json.dumps(data, ensure_ascii=False))
-    confirmation = input(f"A total of {target_collection.count_documents(filter)} pieces of data will be disabled, are you sure? y/n: ")
+    confirmation = input(
+        f"A total of {target_collection.count_documents(filter)} pieces of data will be disabled, are you sure? y/n: "
+    )
     if confirmation.lower() == "y":
         target_collection.update_many(filter, {"$set": {"enabled": False}})

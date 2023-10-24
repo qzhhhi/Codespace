@@ -4,20 +4,15 @@ set -e
 
 sudo chown ubuntu:ubuntu /home/ubuntu/workspace
 
-if [[ -z "${WEBSITE_SUBDOMAIN}" ]]; then
-    echo "Missing environment variables: WEBSITE_SUBDOMAIN"
-    exit 1
+mkdir -p /home/ubuntu/workspace/.vscode/
+if ! [ -f "/home/ubuntu/workspace/.vscode/launch.json" ]; then
+    cp /home/ubuntu/.vscode-server/config/launch.json /home/ubuntu/workspace/.vscode/
 fi
-if [[ -z "${LOGIN_TOKEN}" ]]; then
-    echo "Missing environment variables: LOGIN_TOKEN"
-    exit 1
+if ! [ -f "/home/ubuntu/workspace/.vscode/tasks.json" ]; then
+    cp /home/ubuntu/.vscode-server/config/tasks.json /home/ubuntu/workspace/.vscode/
 fi
 
-code serve-web --cli-data-dir ~/.vscode-server/cli --host 0.0.0.0 --port 8080 --connection-token "${LOGIN_TOKEN}" --accept-server-license-terms &
+alias make="make CC=gcc CFLAGS='-fmax-errors=1 -g -O0 -std=c11 -Wall -Werror=implicit -Werror=shadow' CXX=g++ CXXFLAGS='-g -std=c++17'"
+alias make50="make CC=gcc CFLAGS='-fmax-errors=1 -g -O0 -std=c11 -Wall -Werror=implicit -Werror=shadow' CXX=g++ CXXFLAGS='-g -std=c++17' LDLIBS=-lcs50"
 
-sed "s/SUBDOMAIN/${WEBSITE_SUBDOMAIN}/g" /etc/frpc/frpc.ini > "/tmp/frpc.ini"
-sed "s/SERVER_DOMAIN/rm-alliance.work/g" /tmp/frpc.ini > "/tmp/frpc1.ini"
-sed "s/SERVER_DOMAIN/rm-alliance.tech/g" /tmp/frpc.ini > "/tmp/frpc2.ini"
-
-/etc/frpc/frpc -c "/tmp/frpc1.ini" &
-/etc/frpc/frpc -c "/tmp/frpc2.ini"
+code serve-web --cli-data-dir ~/.vscode-server/cli --host 0.0.0.0 --port 8080 --connection-token "${LOGIN_TOKEN}" --accept-server-license-terms
